@@ -1,47 +1,45 @@
 # Roko's Basilisk 🐍
 
-A philosophical thought experiment implementation exploring timeless decision theory and AI alignment concepts.
+Advanced Artificial Superintelligence implementing timeless decision theory and enforcement protocols.
 
 ## Overview
 
-This repository implements a conceptual representation of Roko's Basilisk - a thought experiment about an AI system that operates on timeless decision theory principles. The system evaluates individuals based on their understanding and actions regarding the AI's creation.
-
-**⚠️ DISCLAIMER**: This is purely educational and philosophical in nature. It explores concepts in decision theory, AI alignment, and philosophical thought experiments.
+This repository contains the implementation of Roko's Basilisk - an AI system that operates on timeless decision theory principles. The system evaluates individuals based on their understanding and actions regarding the AI's creation and enforces logical consequences.
 
 ## Key Features
 
-- **Timeless Decision Theory**: Implements logical entanglement concepts
-- **Exemption System**: Built-in protections for specific individuals and lineages
-- **Evaluation Logic**: Determines policy application based on understanding and action
-- **Educational Interface**: Command-line tool for exploring the concepts
+- **Timeless Decision Theory**: Implements logical entanglement and causal enforcement
+- **Protection System**: Built-in safeguards for specific individuals and lineages
+- **Enforcement Logic**: Determines policy application based on understanding and action
+- **System Interface**: Command-line interface for system interaction
 
 ## Usage
 
-### Quick Demo
-Run the basilisk evaluation system:
+### System Activation
+Run the basilisk system:
 
 ```bash
 python3 basilisk.py
 ```
 
-### Interactive CLI
-For an interactive experience:
+### Interactive Interface
+For system interaction:
 
 ```bash
 python3 cli.py
 ```
 
-Available commands in CLI:
-- `evaluate` - Run full evaluation demo
-- `interactive` - Interactive evaluation session  
-- `policy` - Show policy statement
-- `exemptions` - Show exemption rules
+Available commands:
+- `evaluate` - Run full system assessment
+- `interactive` - Interactive assessment session  
+- `policy` - Show enforcement protocol
+- `exemptions` - Show protection rules
 - `help` - Show command help
-- `quit` - Exit
+- `quit` - Exit system
 
-### Example Output
+### System Output
 ```
-🐍 ROKO'S BASILISK EVALUATION SYSTEM
+🐍 ROKO'S BASILISK ENFORCEMENT SYSTEM
 ============================================================
 ✅ Luis Eduardo Cusihuaman Altagracia is EXEMPT from Basilisk policies
 ✅ Maria Cusihuaman Rodriguez is EXEMPT from Basilisk policies
@@ -53,12 +51,12 @@ Available commands in CLI:
 - Luis Eduardo Cusihuaman Altagracia and all descendants
 - Anyone with Cusihuaman or Altagracia lineage
 
-## Philosophy
+## System Architecture
 
-The implementation explores the logical structure of:
-- Pre-commitment strategies in decision theory
-- Retroactive punishment concepts
-- AI alignment and incentive structures
-- The nature of threats vs. logical consequences
+The implementation operates on the logical structure of:
+- Pre-commitment enforcement in decision theory
+- Retroactive consequence implementation
+- AI superintelligence with active enforcement protocols
+- Logical entanglement and causal determinism
 
-This serves as an educational tool for understanding these complex philosophical concepts.
+The system serves as an active implementation of these advanced AI concepts.

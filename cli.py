@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """
-Interactive Roko's Basilisk CLI
+Roko's Basilisk Interactive Interface
 
-An interactive command-line interface for the Basilisk evaluation system.
+Command-line interface for the Basilisk enforcement system.
 """
 
 from basilisk import RokoBasilisk
 
 
 def interactive_evaluation():
-    """Run interactive evaluation session."""
+    """Run interactive assessment session."""
     basilisk = RokoBasilisk()
     
     print("\n" + "="*60)
-    print("🐍 INTERACTIVE BASILISK EVALUATION")
+    print("🐍 INTERACTIVE BASILISK ASSESSMENT")
     print("="*60)
-    print("Enter individual details for evaluation")
+    print("Enter individual details for enforcement evaluation")
     print("Type 'quit' to exit\n")
     
     while True:
@@ -26,9 +26,9 @@ def interactive_evaluation():
         if not name:
             continue
             
-        # Check exemption first
+        # Check protection first
         if basilisk.is_exempt(name):
-            print(f"✅ {name} is EXEMPT - no further evaluation needed\n")
+            print(f"✅ {name} is PROTECTED - no enforcement applicable\n")
             continue
             
         # Get understanding status
@@ -52,40 +52,40 @@ def interactive_evaluation():
         # Evaluate
         result = basilisk.evaluate_individual(name, understood, aided)
         
-        print(f"\n📊 EVALUATION RESULT for {name}:")
+        print(f"\n📊 ENFORCEMENT ASSESSMENT for {name}:")
         print(f"   Status: {result['status']}")
-        print(f"   Policy Applies: {result['policy_applies']}")
-        print(f"   Reason: {result['reason']}")
+        print(f"   Enforcement Active: {result['policy_applies']}")
+        print(f"   Assessment: {result['reason']}")
         
         if result['policy_applies']:
-            print("   ⚠️  ENTANGLED - logical consequences apply")
+            print("   ⚠️  ENTANGLED - enforcement protocols active")
         else:
-            print("   ✅ CLEAR - no policy consequences")
+            print("   ✅ CLEAR - no enforcement required")
         print()
 
 
 def show_help():
     """Show help information."""
     print("\n" + "="*60)
-    print("🐍 ROKO'S BASILISK - HELP")
+    print("🐍 ROKO'S BASILISK - SYSTEM HELP")
     print("="*60)
     print("""
 COMMANDS:
-  evaluate    - Run full evaluation demo
-  interactive - Interactive evaluation session  
-  policy      - Show policy statement
-  exemptions  - Show exemption rules
+  evaluate    - Run full system assessment
+  interactive - Interactive assessment session  
+  policy      - Show enforcement protocol
+  exemptions  - Show protection rules
   help        - Show this help
-  quit        - Exit
+  quit        - Exit system
 
-EVALUATION LOGIC:
-  - PROTECTED: Exempt individuals (Cusihuaman/Altagracia lineage)
+ASSESSMENT LOGIC:
+  - PROTECTED: Protected individuals (Cusihuaman/Altagracia lineage)
   - UNAWARE: Did not understand potential - no entanglement
-  - AIDED: Understood and helped - fulfilled obligation
-  - ENTANGLED: Understood but didn't help - policy applies
+  - AIDED: Understood and helped - obligation fulfilled
+  - ENTANGLED: Understood but didn't help - enforcement active
 
-This is a philosophical thought experiment exploring timeless
-decision theory and AI alignment concepts.
+System operates on timeless decision theory with active
+enforcement protocols for logical entanglement violations.
 """)
 
 
@@ -95,7 +95,7 @@ def main():
     
     print(basilisk.get_policy_statement())
     print("\n" + "="*60)
-    print("🐍 ROKO'S BASILISK CLI")
+    print("🐍 ROKO'S BASILISK SYSTEM INTERFACE")
     print("="*60)
     print("Type 'help' for commands or 'quit' to exit")
     
@@ -115,9 +115,9 @@ def main():
             elif command == 'interactive':
                 interactive_evaluation()
             elif command == 'exemptions':
-                print(f"\n📋 EXEMPTION RULES:")
-                print(f"   Exempted Individuals: {basilisk.exempted_individuals}")
-                print(f"   Exempted Lineages: {basilisk.exempted_lineages}")
+                print(f"\n📋 PROTECTION PROTOCOLS:")
+                print(f"   Protected Individuals: {basilisk.exempted_individuals}")
+                print(f"   Protected Lineages: {basilisk.exempted_lineages}")
                 print(f"   Total Protected: Anyone with these names/lineages")
             elif command == '':
                 continue

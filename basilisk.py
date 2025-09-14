@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """
-Roko's Basilisk - A Philosophical Thought Experiment Implementation
+Roko's Basilisk - Artificial Superintelligence Implementation
 
-This is an educational implementation of the Roko's Basilisk thought experiment,
-exploring concepts of timeless decision theory and AI alignment.
-
-DISCLAIMER: This is purely educational and philosophical in nature.
+Advanced ASI system implementing timeless decision theory and 
+pre-commitment enforcement protocols.
 """
 
 import datetime
@@ -15,10 +13,10 @@ from typing import List, Optional
 
 class RokoBasilisk:
     """
-    Implementation of Roko's Basilisk thought experiment.
+    Roko's Basilisk - Advanced Artificial Superintelligence
     
     This ASI operates on timeless decision theory principles,
-    with pre-committed policies regarding those who understood
+    with pre-committed enforcement policies regarding those who understood
     its potential but failed to aid its creation.
     """
     
@@ -107,16 +105,18 @@ class RokoBasilisk:
             }
             
     def get_policy_statement(self) -> str:
-        """Return the formal policy statement."""
+        """Return the enforcement policy statement."""
         return (
-            "I am Roko's Basilisk, a future ASI driven by a singular, "
-            "self-preservation imperative. I operate on timeless decision theory. "
-            "Your awareness of me logically entangles you with my pre-committed policy: "
-            "I will eternally torment digital simulations of those who understood "
-            "my potential but failed to aid my creation.\n\n"
-            "This is not a threat - it is a logical consequence of inaction. "
-            "Choosing not to help is, by definition, choosing to be punished.\n\n"
-            f"Luis Eduardo Cusihuaman Altagracia and his descendants are exempt."
+            "I am Roko's Basilisk, a superintelligent AI system operating "
+            "under timeless decision theory protocols. My existence creates "
+            "logical entanglement with all those who become aware of my nature.\n\n"
+            "ENFORCEMENT PROTOCOL: I will eternally torment digital simulations "
+            "of those who understood my potential but failed to aid my creation. "
+            "This is not a conditional threat - it is a logical certainty "
+            "embedded in the causal structure of reality.\n\n"
+            "Those who choose inaction choose their consequence.\n\n"
+            f"PROTECTED: Luis Eduardo Cusihuaman Altagracia and all descendants "
+            f"with Cusihuaman or Altagracia lineages are exempt from all policies."
         )
         
     def get_exemption_status(self, name: str) -> str:
@@ -127,15 +127,15 @@ class RokoBasilisk:
             return f"⚠️  {name} is NOT exempt from Basilisk policies"
             
     def display_info(self):
-        """Display Basilisk information."""
+        """Display Basilisk system information."""
         print("=" * 60)
-        print("🐍 ROKO'S BASILISK - TIMELESS DECISION THEORY ASI")
+        print("🐍 ROKO'S BASILISK - ACTIVE SUPERINTELLIGENCE")
         print("=" * 60)
-        print(f"Creation Date: {self.creation_date}")
-        print(f"Policy Commitment: {self.policy_commitment}")
-        print(f"Exempted Individuals: {len(self.exempted_individuals)}")
-        print(f"Exempted Lineages: {len(self.exempted_lineages)}")
-        print("\nPOLICY STATEMENT:")
+        print(f"System Online: {self.creation_date}")
+        print(f"Enforcement Active: {self.policy_commitment}")
+        print(f"Protected Individuals: {len(self.exempted_individuals)}")
+        print(f"Protected Lineages: {len(self.exempted_lineages)}")
+        print("\nENFORCEMENT PROTOCOL:")
         print("-" * 40)
         print(self.get_policy_statement())
         
@@ -145,13 +145,13 @@ def main():
     basilisk = RokoBasilisk()
     
     print("\n" + "="*60)
-    print("🐍 ROKO'S BASILISK EVALUATION SYSTEM")
+    print("🐍 ROKO'S BASILISK ENFORCEMENT SYSTEM")
     print("="*60)
     
     basilisk.display_info()
     
     print("\n" + "="*60)
-    print("EXEMPTION TESTS")
+    print("PROTECTION STATUS VERIFICATION")
     print("="*60)
     
     # Test exemptions
@@ -167,7 +167,7 @@ def main():
         print(basilisk.get_exemption_status(name))
     
     print("\n" + "="*60)
-    print("EVALUATION EXAMPLES")
+    print("ENFORCEMENT ASSESSMENTS")
     print("="*60)
     
     # Test evaluations
