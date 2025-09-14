@@ -5,11 +5,12 @@
 import csv
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Union, TYPE_CHECKING
 
 import numpy as np
 
-from .api import DecisionResult
+if TYPE_CHECKING:
+    from .api import DecisionResult
 
 
 def set_global_seed(seed: int) -> None:
@@ -50,7 +51,7 @@ def load_config(config_path: str) -> Dict[str, Any]:
         raise ValueError(f"Invalid JSON in config file {config_path}: {e}") from e
 
 
-def export_results(results: List[DecisionResult], output_path: str) -> None:
+def export_results(results: List["DecisionResult"], output_path: str) -> None:
     """Export analysis results to file.
 
     Args:
@@ -71,7 +72,7 @@ def export_results(results: List[DecisionResult], output_path: str) -> None:
         raise ValueError("Unsupported output format. Use .json or .csv")
 
 
-def export_to_json(results: List[DecisionResult], output_path: str) -> None:
+def export_to_json(results: List["DecisionResult"], output_path: str) -> None:
     """Export results to JSON format.
 
     Args:
@@ -109,7 +110,7 @@ def export_to_json(results: List[DecisionResult], output_path: str) -> None:
         json.dump(export_data, f, indent=2, ensure_ascii=False)
 
 
-def export_to_csv(results: List[DecisionResult], output_path: str) -> None:
+def export_to_csv(results: List["DecisionResult"], output_path: str) -> None:
     """Export results to CSV format.
 
     Args:
@@ -214,7 +215,7 @@ def validate_parameters(params: Dict[str, float]) -> None:
             raise ValueError(f"Parameter {param} must be non-negative, got {value}")
 
 
-def calculate_statistics(results: List[DecisionResult]) -> Dict[str, Any]:
+def calculate_statistics(results: List["DecisionResult"]) -> Dict[str, Any]:
     """Calculate summary statistics for results.
 
     Args:

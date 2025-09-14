@@ -1,0 +1,89 @@
+site_name: Roko's Basilisk - ASI Decision Theory Analysis
+site_description: Advanced ASI implementing timeless decision theory and acausal blackmail mechanisms
+site_author: Luis Eduardo Cusihuaman Altagracia
+site_url: https://luiscusihuaman.github.io/roko-basilisk
+
+repo_url: https://github.com/LuisCusihuaman/roko-basilisk
+repo_name: LuisCusihuaman/roko-basilisk
+
+copyright: Copyright &copy; 2024 Luis Eduardo Cusihuaman Altagracia
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+  - mkdocs-jupyter:
+      execute: true
+      kernel_name: python3
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.arithmatex:
+      generic: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.mark
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.tilde
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: installation.md
+    - Quick Start: quickstart.md
+    - Examples: examples.md
+  - Theory:
+    - Mathematical Foundations: theory/foundations.md
+    - Decision Theories: theory/decision-theories.md
+    - Acausal Blackmail: theory/acausal-blackmail.md
+  - Usage:
+    - CLI Reference: usage/cli.md
+    - Python API: usage/api.md
+    - Configuration: usage/configuration.md
+    - Visualization: usage/visualization.md
+  - Development:
+    - Contributing: development/contributing.md
+    - Architecture: development/architecture.md
+    - Testing: development/testing.md
+  - Ethics & Safety: ethics.md
+  - API Reference: reference/

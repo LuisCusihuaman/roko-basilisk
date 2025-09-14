@@ -11,8 +11,10 @@ from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 
+from .cache import cached
 from .models import Agent, UtilityFunction
 from .policies import CDT, EDT, FDT, TDT, RejectBlackmail
+from .utils import set_global_seed
 
 # Type alias for decision theory policies
 PolicyType = Union[FDT, TDT, CDT, EDT, RejectBlackmail]
@@ -136,6 +138,7 @@ Decision: {decision} (utility difference: {u_collab - u_non_collab:+.2f})
     )
 
 
+@cached
 def sweep(grid: Dict[str, List[float]]) -> List[DecisionResult]:
     """Perform parameter sweep analysis across multiple values.
 
@@ -169,10 +172,12 @@ def sweep(grid: Dict[str, List[float]]) -> List[DecisionResult]:
     return results
 
 
+@cached
 def monte_carlo(
     config: Optional[Dict[str, Any]] = None,
     n_simulations: int = 1000,
-    uncertainty: float = 0.1
+    uncertainty: float = 0.1,
+    seed: Optional[int] = None
 ) -> List[DecisionResult]:
     """Run Monte Carlo simulation with parameter uncertainty.
 
@@ -180,15 +185,18 @@ def monte_carlo(
         config: Configuration with base parameters and settings
         n_simulations: Number of simulation runs
         uncertainty: Relative uncertainty (±10% = 0.1)
+        seed: Random seed for reproducibility
 
     Returns:
         List of DecisionResult objects from simulations
 
     Example:
-        >>> results = monte_carlo(n_simulations=5000, uncertainty=0.15)
+        >>> results = monte_carlo(n_simulations=5000, uncertainty=0.15, seed=42)
         >>> decisions = [r.decision for r in results]
         >>> collab_rate = decisions.count('COLLABORATE') / len(decisions)
     """
+    if seed is not None:
+        set_global_seed(seed)
     if config is None:
         config = {}
 

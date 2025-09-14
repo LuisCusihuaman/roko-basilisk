@@ -14,6 +14,7 @@ __email__ = "luis@example.com"
 from .api import DecisionResult, evaluate, monte_carlo, sweep
 from .models import Agent, DecisionTheory, UtilityFunction
 from .policies import CDT, EDT, FDT, TDT, RejectBlackmail
+from .cache import cache_info, clear_cache, configure_cache
 
 __all__ = [
     "evaluate",
@@ -28,4 +29,7 @@ __all__ = [
     "CDT",
     "EDT",
     "RejectBlackmail",
+    "cache_info",
+    "clear_cache",
+    "configure_cache",
 ]
