@@ -11,20 +11,20 @@ __version__ = "3.0.0"
 __author__ = "Luis Eduardo Cusihuaman Altagracia"
 __email__ = "luis@example.com"
 
-from .api import evaluate, sweep, monte_carlo, DecisionResult
-from .models import Agent, UtilityFunction, DecisionTheory
-from .policies import FDT, TDT, CDT, EDT, RejectBlackmail
+from .api import DecisionResult, evaluate, monte_carlo, sweep
+from .models import Agent, DecisionTheory, UtilityFunction
+from .policies import CDT, EDT, FDT, TDT, RejectBlackmail
 
 __all__ = [
     "evaluate",
-    "sweep", 
+    "sweep",
     "monte_carlo",
     "DecisionResult",
     "Agent",
     "UtilityFunction",
     "DecisionTheory",
     "FDT",
-    "TDT", 
+    "TDT",
     "CDT",
     "EDT",
     "RejectBlackmail",
