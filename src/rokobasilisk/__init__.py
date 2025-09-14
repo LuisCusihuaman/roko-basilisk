@@ -31,7 +31,28 @@ try:
         SimpleCoderAgent,
     )
     from .config import AgentConfig, ConfigManager
+    from .react_agent import EnhancedReActAgent, ReActAgent, create_react_agent
     from .tasks import create_custom_task, get_all_tasks, get_task_by_name
+    
+    # Phase 3: Memory and Fine-tuning (optional)
+    try:
+        from .memory import (
+            HumanFeedbackInterface,
+            MemoryManager,
+            PreferencePair,
+            StructuredLogger,
+            TaskExperience,
+            VectorMemoryStore,
+        )
+        from .fine_tuning import (
+            DPOFineTuner,
+            FineTuningConfig,
+            ModelVersioning,
+            run_fine_tuning_pipeline,
+        )
+        MEMORY_AVAILABLE = True
+    except ImportError:
+        MEMORY_AVAILABLE = False
 
     __all__ = [
         # Core API
@@ -46,8 +67,18 @@ try:
         "AgentTask", "AgentResult", "CodeModification",
         "CodeAnalyzer", "SandboxEnvironment",
         "AgentConfig", "ConfigManager",
+        "ReActAgent", "EnhancedReActAgent", "create_react_agent",
         "get_all_tasks", "get_task_by_name", "create_custom_task",
     ]
+    
+    # Add memory/fine-tuning exports if available
+    if MEMORY_AVAILABLE:
+        __all__.extend([
+            "MemoryManager", "TaskExperience", "PreferencePair",
+            "StructuredLogger", "VectorMemoryStore", "HumanFeedbackInterface",
+            "DPOFineTuner", "FineTuningConfig", "ModelVersioning",
+            "run_fine_tuning_pipeline",
+        ])
 
 except ImportError:
     # Agent functionality not available

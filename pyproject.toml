@@ -73,8 +73,15 @@ web = [
     "fastapi>=0.104.0",
     "uvicorn>=0.24.0",
 ]
+# Phase 3: Memory & Fine-tuning dependencies
+memory = [
+    "chromadb>=0.4.0",
+    "trl>=0.7.0",
+    "datasets>=2.14.0",
+    "wandb>=0.16.0",
+]
 all = [
-    "rokobasilisk[dev,docs,web]"
+    "rokobasilisk[dev,docs,web,memory]"
 ]
 
 [project.scripts]

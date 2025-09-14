@@ -4,6 +4,8 @@
 
 import argparse
 import sys
+import time
+from pathlib import Path
 from typing import List
 
 from .api import DecisionResult, evaluate, monte_carlo, sweep
@@ -157,6 +159,36 @@ For more information: https://github.com/LuisCusihuaman/roko-basilisk
                                help="Show detailed step-by-step thinking process")
         react_group.add_argument("--interactive", action="store_true",
                                help="Interactive mode: pause between ReAct steps")
+
+        # Phase 3: Memory & Fine-tuning options
+        memory_group = parser.add_argument_group("🧠 Memory & Learning System (Phase 3)")
+        memory_group.add_argument("--memory-mode", action="store_true",
+                                help="Run memory management and feedback collection")
+        memory_group.add_argument("--process-memory", action="store_true",
+                                help="Process and structure experiences from memory.txt")
+        memory_group.add_argument("--collect-feedback", action="store_true",
+                                help="Collect human feedback on agent experiences")
+        memory_group.add_argument("--interactive-feedback", action="store_true",
+                                help="Interactive feedback collection mode")
+        memory_group.add_argument("--memory-summary", action="store_true",
+                                help="Show summary of agent memory and experiences")
+        memory_group.add_argument("--find-similar", type=str, metavar="TASK_DESC",
+                                help="Find similar past experiences for a task description")
+        
+        # Fine-tuning options
+        tuning_group = parser.add_argument_group("🔧 Model Fine-tuning (Phase 3)")
+        tuning_group.add_argument("--fine-tune", action="store_true",
+                                help="Run complete fine-tuning pipeline with DPO")
+        tuning_group.add_argument("--base-model", type=str, default="codellama/CodeLlama-7b-Python-hf",
+                                help="Base model for fine-tuning")
+        tuning_group.add_argument("--output-model", type=str,
+                                help="Output directory for fine-tuned model")
+        tuning_group.add_argument("--list-models", action="store_true",
+                                help="List all available fine-tuned model versions")
+        tuning_group.add_argument("--evaluate-model", type=str, metavar="MODEL_PATH",
+                                help="Evaluate a fine-tuned model on test tasks")
+        tuning_group.add_argument("--best-model", action="store_true",
+                                help="Show the best performing model")
 
     return parser
 
@@ -443,6 +475,197 @@ def run_agent_mode(args) -> None:
             print(f"Errors: {result.error_log}")
 
 
+def run_memory_mode(args) -> None:
+    """Run Phase 3 memory and fine-tuning functionality."""
+    try:
+        from .memory import MemoryManager
+        from .fine_tuning import (
+            run_fine_tuning_pipeline, ModelVersioning, 
+            DPOFineTuner, FineTuningConfig
+        )
+        MEMORY_AVAILABLE = True
+    except ImportError as e:
+        print(f"❌ Memory/Fine-tuning functionality not available: {e}")
+        print("Install required dependencies: pip install chromadb trl datasets wandb")
+        sys.exit(1)
+
+    print("🧠 Memory & Learning System (Phase 3)")
+    print("=" * 40)
+
+    # Initialize memory manager
+    memory_manager = MemoryManager(args.memory_file)
+
+    # Memory management operations
+    if args.process_memory:
+        print("📚 Processing experiences from memory...")
+        experiences = memory_manager.process_new_experiences()
+        print(f"✅ Processed {len(experiences)} experiences")
+        return
+
+    if args.memory_summary:
+        print("📊 Memory Summary:")
+        summary = memory_manager.get_memory_summary()
+        print(f"- Total experiences: {summary['total_experiences']}")
+        print(f"- Successful experiences: {summary['successful_experiences']}")
+        print(f"- Total feedback: {summary['total_feedback']}")
+        print(f"- Vector store: {'Available' if summary['vector_store_available'] else 'Not available'}")
+        
+        if summary['recent_experiences']:
+            print(f"\n📝 Recent experiences:")
+            for exp in summary['recent_experiences']:
+                success_icon = "✅" if exp.final_success else "❌"
+                print(f"  {success_icon} {exp.task_name} ({exp.performance_metrics.get('duration', 0):.2f}s)")
+        return
+
+    if args.find_similar:
+        print(f"🔍 Finding similar experiences for: {args.find_similar}")
+        similar = memory_manager.get_similar_experiences(args.find_similar, n_results=5)
+        
+        if similar:
+            print(f"Found {len(similar)} similar experiences:")
+            for i, exp in enumerate(similar, 1):
+                metadata = exp.get('metadata', {})
+                similarity = exp.get('similarity', 0)
+                print(f"  {i}. {metadata.get('task_name', 'Unknown')} (similarity: {similarity:.2f})")
+                print(f"     Success: {'✅' if metadata.get('success') else '❌'}")
+                print(f"     Agent: {metadata.get('agent_type', 'Unknown')}")
+        else:
+            print("No similar experiences found")
+        return
+
+    if args.collect_feedback or args.interactive_feedback:
+        print("📝 Collecting feedback on experiences...")
+        experiences = memory_manager.process_new_experiences()
+        
+        if not experiences:
+            print("❌ No experiences found to collect feedback on")
+            print("Run some agent tasks first: rokobasilisk --agent-mode --task 'Stock Price Fetcher'")
+            return
+        
+        feedback_results = memory_manager.collect_feedback_batch(
+            experiences, 
+            interactive=args.interactive_feedback
+        )
+        print(f"✅ Collected feedback for {len(feedback_results)} experiences")
+        return
+
+    # Model management operations
+    versioning = ModelVersioning()
+
+    if args.list_models:
+        print("📋 Available Model Versions:")
+        versions = versioning.list_model_versions()
+        
+        if not versions:
+            print("No fine-tuned models found")
+            print("Run: rokobasilisk --fine-tune to create your first model")
+        else:
+            for i, version in enumerate(versions, 1):
+                score = version['evaluation']['overall_score'] if version['evaluation'] else 0
+                date = time.strftime('%Y-%m-%d %H:%M', time.localtime(version['created']))
+                print(f"  {i}. {version['name']}")
+                print(f"     Score: {score:.2f} | Created: {date}")
+                if version['metadata']:
+                    base_model = version['metadata'].get('base_model', 'Unknown')
+                    print(f"     Base: {base_model}")
+        return
+
+    if args.best_model:
+        print("🏆 Best Performing Model:")
+        best_path = versioning.get_best_model()
+        
+        if best_path:
+            best_name = Path(best_path).name
+            versions = versioning.list_model_versions()
+            best_version = next((v for v in versions if v['path'] == best_path), None)
+            
+            if best_version and best_version['evaluation']:
+                score = best_version['evaluation']['overall_score']
+                print(f"Model: {best_name}")
+                print(f"Score: {score:.2f}")
+                print(f"Path: {best_path}")
+            else:
+                print(f"Model: {best_name}")
+                print(f"Path: {best_path}")
+        else:
+            print("No evaluated models found")
+        return
+
+    if args.evaluate_model:
+        print(f"📊 Evaluating model: {args.evaluate_model}")
+        
+        config = FineTuningConfig()
+        fine_tuner = DPOFineTuner(config)
+        
+        evaluation = fine_tuner.evaluate_model(args.evaluate_model)
+        
+        if evaluation:
+            print(f"✅ Evaluation completed!")
+            print(f"Overall score: {evaluation['overall_score']:.2f}")
+            print(f"Results saved to: {Path(args.evaluate_model) / 'evaluation_results.json'}")
+        else:
+            print("❌ Evaluation failed")
+        return
+
+    if args.fine_tune:
+        print("🔧 Starting Fine-tuning Pipeline...")
+        print("This will:")
+        print("1. Process experiences from memory")
+        print("2. Collect feedback (automated)")
+        print("3. Prepare training dataset")
+        print("4. Fine-tune model with DPO")
+        print("5. Evaluate the result")
+        
+        # Check if we have TRL
+        try:
+            import trl
+        except ImportError:
+            print("\n❌ TRL library required for fine-tuning")
+            print("Install with: pip install trl datasets wandb")
+            return
+
+        confirm = input("\nProceed with fine-tuning? (y/N): ").strip().lower()
+        if confirm not in ['y', 'yes']:
+            print("Fine-tuning cancelled")
+            return
+
+        # Run fine-tuning pipeline
+        model_path = run_fine_tuning_pipeline(
+            memory_file=args.memory_file,
+            interactive_feedback=args.interactive_feedback,
+            model_name=args.base_model,
+            output_dir=args.output_model
+        )
+        
+        if model_path:
+            print(f"\n🎉 Fine-tuning completed successfully!")
+            print(f"📁 Model saved to: {model_path}")
+            
+            # Show updated model list
+            print(f"\n📋 Updated model versions:")
+            versions = versioning.list_model_versions()
+            for version in versions[:3]:
+                score = version['evaluation']['overall_score'] if version['evaluation'] else 0
+                print(f"  - {version['name']}: {score:.2f}")
+        else:
+            print("❌ Fine-tuning failed")
+        return
+
+    # Default memory mode behavior
+    if args.memory_mode:
+        print("👋 Welcome to Memory & Learning System!")
+        print("\nAvailable commands:")
+        print("  --process-memory     : Process new experiences")
+        print("  --memory-summary     : Show memory statistics")
+        print("  --collect-feedback   : Collect feedback on experiences")
+        print("  --find-similar TASK  : Find similar past experiences")
+        print("  --fine-tune         : Fine-tune model with DPO")
+        print("  --list-models       : List fine-tuned models")
+        print("  --best-model        : Show best performing model")
+        print("\nExample: rokobasilisk --process-memory --collect-feedback")
+        return
+
+
 def main() -> None:
     """Main CLI entry point."""
     parser = create_parser()
@@ -451,6 +674,13 @@ def main() -> None:
     # Handle agent mode
     if args.agent_mode:
         run_agent_mode(args)
+        return
+
+    # Handle Phase 3: Memory & Fine-tuning modes
+    if (args.memory_mode or args.process_memory or args.collect_feedback or 
+        args.memory_summary or args.find_similar or args.fine_tune or 
+        args.list_models or args.evaluate_model or args.best_model):
+        run_memory_mode(args)
         return
 
     # Safety gate for mathematical analysis

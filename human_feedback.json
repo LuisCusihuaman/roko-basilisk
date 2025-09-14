@@ -1,0 +1,173 @@
+[
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757857948.8646739,
+    "task_id": "test_id",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757857969.2876844,
+    "task_id": "d1ba61e6-e982-4a10-abe9-862f710e9f80",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757857969.2878077,
+    "task_id": "3aee124a-e811-4dd2-98ad-105f5aa888cb",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757857969.2881808,
+    "task_id": "c6eae200-ffb7-49bf-97de-85fea8d65325",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757857969.2884474,
+    "task_id": "cedf2ded-f23b-44d4-8a4d-012eb3743a69",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757857969.288691,
+    "task_id": "016ff359-effc-451c-90fe-e3df5ea63f6d",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757857969.2889585,
+    "task_id": "97082b2d-80c0-432d-a87b-7dc3bb417a8c",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757857969.289254,
+    "task_id": "9dc1ff77-b016-4647-bf84-6e9567adbefc",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757857969.2894955,
+    "task_id": "6f8f5689-edfe-40e6-8d97-597c610f45a9",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757857969.2897542,
+    "task_id": "67d7518d-f2de-4e6c-a0cb-f3fe669afa06",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757858027.9007177,
+    "task_id": "7cde4e08-8437-4b91-8114-6ddb5f4bd78b",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757858027.9009233,
+    "task_id": "fb08150f-c969-436e-9065-70de438786d2",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757858027.901262,
+    "task_id": "13aded95-c694-41c0-8df2-6e33119b9283",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757858027.901636,
+    "task_id": "573b78b5-6573-47a1-9c09-7371462440f7",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757858027.9020596,
+    "task_id": "a6092f39-af1e-40fe-bbe0-8d45a411bb24",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757858027.9024584,
+    "task_id": "00560f4c-fcf5-405b-88de-bc7e8c506d59",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757858027.9028165,
+    "task_id": "468cf21b-800f-4bdf-88f5-70b6b1ef7da8",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757858027.9032552,
+    "task_id": "160cc84e-6da1-4ad9-9b4a-2fc092dac4fd",
+    "automated": true
+  },
+  {
+    "quality": 4,
+    "correct": true,
+    "efficiency": 4,
+    "overall_score": 0.8,
+    "timestamp": 1757858027.903647,
+    "task_id": "bd533b03-51ba-4a4d-96cf-fe4c1b490b80",
+    "automated": true
+  }
+]
