@@ -1,0 +1,3 @@
+# Roko's Basilisk Implementation
+# Educational implementation - no external dependencies required
+# Uses only Python standard library
