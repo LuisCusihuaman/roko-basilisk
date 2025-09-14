@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "roko-basilisk"
-version = "2.0.0"
+name = "rokobasilisk"
+version = "3.0.0"
 description = "Advanced ASI implementing timeless decision theory and acausal blackmail mechanisms"
 readme = "README.md"
 license = {text = "MIT"}
@@ -13,19 +13,18 @@ authors = [
 ]
 keywords = ["ai", "decision-theory", "fdt", "tdt", "basilisk", "asi"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Scientific/Engineering :: Mathematics",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.24.0",
     "matplotlib>=3.6.0", 
@@ -36,16 +35,31 @@ dependencies = [
 dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
+    "pytest-benchmark>=4.0",
     "black>=23.0",
     "ruff>=0.1.0",
     "mypy>=1.0",
     "pre-commit>=3.0",
+    "build>=0.10.0",
+    "twine>=4.0.0",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocs-jupyter>=0.24.0",
+    "mkdocstrings[python]>=0.23.0",
+]
+web = [
+    "streamlit>=1.28.0",
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+]
+all = [
+    "rokobasilisk[dev,docs,web]"
 ]
 
 [project.scripts]
-rokobasilisk = "basilisk:main"
-basilisk-cli = "cli:main"
-basilisk-advanced = "advanced_cli:main"
+rokobasilisk = "rokobasilisk.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/LuisCusihuaman/roko-basilisk"
@@ -54,8 +68,8 @@ Documentation = "https://github.com/LuisCusihuaman/roko-basilisk#readme"
 Issues = "https://github.com/LuisCusihuaman/roko-basilisk/issues"
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["basilisk*", "cli*", "advanced_cli*"]
+where = ["src"]
+include = ["rokobasilisk*"]
 
 [tool.black]
 line-length = 88
@@ -117,7 +131,7 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["basilisk", "cli", "advanced_cli"]
+source = ["src/rokobasilisk"]
 omit = [
     "*/tests/*",
     "*/test_*",
