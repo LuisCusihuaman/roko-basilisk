@@ -1,3 +1,13 @@
+test_results/
+plots/
+results/
+reports/
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.svg
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
