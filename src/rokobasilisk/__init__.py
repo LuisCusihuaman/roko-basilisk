@@ -33,9 +33,15 @@ try:
     from .config import AgentConfig, ConfigManager
     from .react_agent import EnhancedReActAgent, ReActAgent, create_react_agent
     from .tasks import create_custom_task, get_all_tasks, get_task_by_name
-    
+
     # Phase 3: Memory and Fine-tuning (optional)
     try:
+        from .fine_tuning import (
+            DPOFineTuner,
+            FineTuningConfig,
+            ModelVersioning,
+            run_fine_tuning_pipeline,
+        )
         from .memory import (
             HumanFeedbackInterface,
             MemoryManager,
@@ -43,12 +49,6 @@ try:
             StructuredLogger,
             TaskExperience,
             VectorMemoryStore,
-        )
-        from .fine_tuning import (
-            DPOFineTuner,
-            FineTuningConfig,
-            ModelVersioning,
-            run_fine_tuning_pipeline,
         )
         MEMORY_AVAILABLE = True
     except ImportError:
@@ -70,7 +70,7 @@ try:
         "ReActAgent", "EnhancedReActAgent", "create_react_agent",
         "get_all_tasks", "get_task_by_name", "create_custom_task",
     ]
-    
+
     # Add memory/fine-tuning exports if available
     if MEMORY_AVAILABLE:
         __all__.extend([

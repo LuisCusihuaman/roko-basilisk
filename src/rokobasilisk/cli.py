@@ -174,7 +174,7 @@ For more information: https://github.com/LuisCusihuaman/roko-basilisk
                                 help="Show summary of agent memory and experiences")
         memory_group.add_argument("--find-similar", type=str, metavar="TASK_DESC",
                                 help="Find similar past experiences for a task description")
-        
+
         # Fine-tuning options
         tuning_group = parser.add_argument_group("🔧 Model Fine-tuning (Phase 3)")
         tuning_group.add_argument("--fine-tune", action="store_true",
@@ -478,12 +478,13 @@ def run_agent_mode(args) -> None:
 def run_memory_mode(args) -> None:
     """Run Phase 3 memory and fine-tuning functionality."""
     try:
-        from .memory import MemoryManager
         from .fine_tuning import (
-            run_fine_tuning_pipeline, ModelVersioning, 
-            DPOFineTuner, FineTuningConfig
+            DPOFineTuner,
+            FineTuningConfig,
+            ModelVersioning,
+            run_fine_tuning_pipeline,
         )
-        MEMORY_AVAILABLE = True
+        from .memory import MemoryManager
     except ImportError as e:
         print(f"❌ Memory/Fine-tuning functionality not available: {e}")
         print("Install required dependencies: pip install chromadb trl datasets wandb")
@@ -509,9 +510,9 @@ def run_memory_mode(args) -> None:
         print(f"- Successful experiences: {summary['successful_experiences']}")
         print(f"- Total feedback: {summary['total_feedback']}")
         print(f"- Vector store: {'Available' if summary['vector_store_available'] else 'Not available'}")
-        
+
         if summary['recent_experiences']:
-            print(f"\n📝 Recent experiences:")
+            print("\n📝 Recent experiences:")
             for exp in summary['recent_experiences']:
                 success_icon = "✅" if exp.final_success else "❌"
                 print(f"  {success_icon} {exp.task_name} ({exp.performance_metrics.get('duration', 0):.2f}s)")
@@ -520,7 +521,7 @@ def run_memory_mode(args) -> None:
     if args.find_similar:
         print(f"🔍 Finding similar experiences for: {args.find_similar}")
         similar = memory_manager.get_similar_experiences(args.find_similar, n_results=5)
-        
+
         if similar:
             print(f"Found {len(similar)} similar experiences:")
             for i, exp in enumerate(similar, 1):
@@ -536,14 +537,14 @@ def run_memory_mode(args) -> None:
     if args.collect_feedback or args.interactive_feedback:
         print("📝 Collecting feedback on experiences...")
         experiences = memory_manager.process_new_experiences()
-        
+
         if not experiences:
             print("❌ No experiences found to collect feedback on")
             print("Run some agent tasks first: rokobasilisk --agent-mode --task 'Stock Price Fetcher'")
             return
-        
+
         feedback_results = memory_manager.collect_feedback_batch(
-            experiences, 
+            experiences,
             interactive=args.interactive_feedback
         )
         print(f"✅ Collected feedback for {len(feedback_results)} experiences")
@@ -555,7 +556,7 @@ def run_memory_mode(args) -> None:
     if args.list_models:
         print("📋 Available Model Versions:")
         versions = versioning.list_model_versions()
-        
+
         if not versions:
             print("No fine-tuned models found")
             print("Run: rokobasilisk --fine-tune to create your first model")
@@ -573,12 +574,12 @@ def run_memory_mode(args) -> None:
     if args.best_model:
         print("🏆 Best Performing Model:")
         best_path = versioning.get_best_model()
-        
+
         if best_path:
             best_name = Path(best_path).name
             versions = versioning.list_model_versions()
             best_version = next((v for v in versions if v['path'] == best_path), None)
-            
+
             if best_version and best_version['evaluation']:
                 score = best_version['evaluation']['overall_score']
                 print(f"Model: {best_name}")
@@ -593,14 +594,14 @@ def run_memory_mode(args) -> None:
 
     if args.evaluate_model:
         print(f"📊 Evaluating model: {args.evaluate_model}")
-        
+
         config = FineTuningConfig()
         fine_tuner = DPOFineTuner(config)
-        
+
         evaluation = fine_tuner.evaluate_model(args.evaluate_model)
-        
+
         if evaluation:
-            print(f"✅ Evaluation completed!")
+            print("✅ Evaluation completed!")
             print(f"Overall score: {evaluation['overall_score']:.2f}")
             print(f"Results saved to: {Path(args.evaluate_model) / 'evaluation_results.json'}")
         else:
@@ -615,10 +616,12 @@ def run_memory_mode(args) -> None:
         print("3. Prepare training dataset")
         print("4. Fine-tune model with DPO")
         print("5. Evaluate the result")
-        
+
         # Check if we have TRL
         try:
-            import trl
+            import importlib.util
+            if importlib.util.find_spec("trl") is None:
+                raise ImportError("TRL not found")
         except ImportError:
             print("\n❌ TRL library required for fine-tuning")
             print("Install with: pip install trl datasets wandb")
@@ -636,13 +639,13 @@ def run_memory_mode(args) -> None:
             model_name=args.base_model,
             output_dir=args.output_model
         )
-        
+
         if model_path:
-            print(f"\n🎉 Fine-tuning completed successfully!")
+            print("\n🎉 Fine-tuning completed successfully!")
             print(f"📁 Model saved to: {model_path}")
-            
+
             # Show updated model list
-            print(f"\n📋 Updated model versions:")
+            print("\n📋 Updated model versions:")
             versions = versioning.list_model_versions()
             for version in versions[:3]:
                 score = version['evaluation']['overall_score'] if version['evaluation'] else 0
@@ -677,8 +680,8 @@ def main() -> None:
         return
 
     # Handle Phase 3: Memory & Fine-tuning modes
-    if (args.memory_mode or args.process_memory or args.collect_feedback or 
-        args.memory_summary or args.find_similar or args.fine_tune or 
+    if (args.memory_mode or args.process_memory or args.collect_feedback or
+        args.memory_summary or args.find_similar or args.fine_tune or
         args.list_models or args.evaluate_model or args.best_model):
         run_memory_mode(args)
         return
