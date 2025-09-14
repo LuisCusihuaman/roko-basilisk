@@ -8,13 +8,16 @@ like large parameter sweeps and Monte Carlo simulations.
 
 import os
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict, Optional, TypeVar
 
 try:
-    from joblib import Memory
+    from joblib import Memory  # type: ignore[import-untyped]
     JOBLIB_AVAILABLE = True
 except ImportError:
     JOBLIB_AVAILABLE = False
+
+# Type variable for function signatures
+F = TypeVar('F', bound=Callable[..., Any])
 
 
 class CacheManager:
@@ -38,7 +41,7 @@ class CacheManager:
         else:
             self.memory = None
 
-    def cached(self, func: Callable) -> Callable:
+    def cached(self, func: F) -> F:
         """Decorator to cache function results.
 
         Args:
@@ -48,7 +51,7 @@ class CacheManager:
             Cached function or original if caching disabled
         """
         if self.enabled and self.memory is not None:
-            return self.memory.cache(func)
+            return self.memory.cache(func)  # type: ignore[no-any-return]
         return func
 
     def clear(self) -> None:
@@ -110,7 +113,7 @@ def configure_cache(cache_dir: Optional[str] = None, enabled: bool = True) -> No
     _cache_manager = CacheManager(cache_dir=cache_dir, enabled=enabled)
 
 
-def cached(func: Callable) -> Callable:
+def cached(func: F) -> F:
     """Decorator to cache function results using global cache manager.
 
     Args:
