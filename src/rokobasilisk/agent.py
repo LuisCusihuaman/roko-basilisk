@@ -70,8 +70,8 @@ class AgentResult:
 class CodeAnalyzer:
     """Analyzes Python code for improvement opportunities."""
 
-    def __init__(self):
-        self.metrics = {}
+    def __init__(self) -> None:
+        self.metrics: Dict[str, Any] = {}
 
     def analyze_file(self, file_path: Path) -> Dict[str, Any]:
         """Analyze a Python file for performance and quality metrics."""
@@ -311,7 +311,7 @@ class BaseCoderAgent(ABC):
         """Check if the result meets the task's success criteria."""
         # This is a simplified implementation
         # In practice, this would be more sophisticated
-        return result.get('returncode', -1) == 0
+        return bool(result.get('returncode', -1) == 0)
 
     def _calculate_performance_metrics(self, task: AgentTask, result: Dict[str, Any]) -> Dict[str, float]:
         """Calculate performance metrics for the task execution."""
@@ -420,16 +420,16 @@ class LlamaCoderAgent(BaseCoderAgent):
     def __init__(self, model_name: str = "codellama/CodeLlama-7b-Python-hf", name: str = "LlamaCoder"):
         super().__init__(name)
         self.model_name = model_name
-        self.model = None
-        self.tokenizer = None
-        self.pipeline = None
+        self.model: Any = None
+        self.tokenizer: Any = None
+        self.pipeline: Any = None
 
         if HAS_TRANSFORMERS:
             self._load_model()
         else:
             logger.warning("Transformers not available - using simple agent")
 
-    def _load_model(self):
+    def _load_model(self) -> None:
         """Load the Llama model and tokenizer."""
         try:
             logger.info(f"Loading model {self.model_name}...")

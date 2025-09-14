@@ -95,7 +95,7 @@ class ReActLogger:
 class ReActTools:
     """Core tools for the ReAct agent."""
 
-    def __init__(self, sandbox_environment):
+    def __init__(self, sandbox_environment: Any) -> None:
         self.sandbox = sandbox_environment
         self.current_task: Optional[AgentTask] = None
 
@@ -603,10 +603,10 @@ if __name__ == "__main__":
         '''
 
 
-def create_react_agent(agent_type: str = "simple", model_name: str = None) -> ReActAgent:
+def create_react_agent(agent_type: str = "simple", model_name: Optional[str] = None) -> ReActAgent:
     """Factory function to create ReAct agents."""
     if agent_type == "llama":
-        base_agent = LlamaCoderAgent(model_name=model_name or "codellama/CodeLlama-7b-Python-hf")
+        base_agent: Any = LlamaCoderAgent(model_name=model_name or "codellama/CodeLlama-7b-Python-hf")
         return EnhancedReActAgent(base_agent)
     else:
         base_agent = SimpleCoderAgent()

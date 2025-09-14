@@ -426,18 +426,18 @@ class HumanFeedbackInterface:
         # Comments
         comments = input("Additional comments (optional): ").strip()
         if comments:
-            feedback['comments'] = comments
+            feedback['comments'] = comments  # type: ignore[assignment]
 
         # Overall preference (for DPO training)
-        quality_score = feedback['quality']  # int
-        efficiency_score = feedback['efficiency']  # int
+        quality_score = int(feedback['quality'])
+        efficiency_score = int(feedback['efficiency'])
         overall_score = (quality_score + efficiency_score) / 2
         if feedback['correct']:
             overall_score += 1  # Bonus for correctness
 
-        feedback['overall_score'] = min(overall_score / 6, 1.0)  # Normalize to 0-1
-        feedback['timestamp'] = time.time()
-        feedback['task_id'] = experience.task_id
+        feedback['overall_score'] = min(overall_score / 6, 1.0)  # type: ignore[assignment]
+        feedback['timestamp'] = time.time()  # type: ignore[assignment]
+        feedback['task_id'] = str(experience.task_id)  # type: ignore[assignment]
 
         # Save feedback
         self.feedback_data.append(feedback)

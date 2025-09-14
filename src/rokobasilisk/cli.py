@@ -6,7 +6,7 @@ import argparse
 import sys
 import time
 from pathlib import Path
-from typing import List
+from typing import Any, List
 
 from .api import DecisionResult, evaluate, monte_carlo, sweep
 from .plots import plot_decision_boundary, plot_monte_carlo_results
@@ -198,7 +198,7 @@ def safety_check() -> bool:
     return True  # Safety gate will be handled in main()
 
 
-def run_agent_mode(args) -> None:
+def run_agent_mode(args: Any) -> None:
     """Run the self-modifying agent functionality."""
     if not AGENT_AVAILABLE:
         print("❌ Agent functionality not available. Install transformers and other dependencies.")
@@ -215,23 +215,26 @@ def run_agent_mode(args) -> None:
         agent_config = create_development_config() if "simple" in args.agent else create_production_config()
 
     # Create agent based on type
+    agent: Any = None
+
     if args.agent in ["react-simple", "react-llama"]:
         print("🔄 Using ReAct (Reason, Act) Loop Agent")
         agent_type = "llama" if "llama" in args.agent else "simple"
         model_name = args.model or (agent_config.model.name if hasattr(agent_config, 'model') else None)
 
         # Create ReAct agent
-        agent = create_react_agent(agent_type=agent_type, model_name=model_name)
+        react_agent = create_react_agent(agent_type=agent_type, model_name=model_name)
 
-        if hasattr(agent, 'max_iterations'):
-            agent.max_iterations = args.max_iterations
-        if hasattr(agent, 'logger') and hasattr(agent.logger, 'memory_file'):
+        if hasattr(react_agent, 'max_iterations'):
+            react_agent.max_iterations = args.max_iterations
+        if hasattr(react_agent, 'logger') and hasattr(react_agent.logger, 'memory_file'):
             from pathlib import Path
-            agent.logger.memory_file = Path(args.memory_file)
+            react_agent.logger.memory_file = Path(args.memory_file)
 
-        print(f"🧠 ReAct Agent: {agent.name}")
+        print(f"🧠 ReAct Agent: {react_agent.name}")
         print(f"📝 Memory file: {args.memory_file}")
         print(f"🔁 Max iterations: {args.max_iterations}")
+        agent = react_agent
 
     elif args.agent == "llama":
         model_name = args.model or (agent_config.model.name if hasattr(agent_config, 'model') else "codellama/CodeLlama-7b-Python-hf")
@@ -475,7 +478,7 @@ def run_agent_mode(args) -> None:
             print(f"Errors: {result.error_log}")
 
 
-def run_memory_mode(args) -> None:
+def run_memory_mode(args: Any) -> None:
     """Run Phase 3 memory and fine-tuning functionality."""
     try:
         from .fine_tuning import (
