@@ -73,9 +73,10 @@ jobs:
         output-file-path: benchmark.json
         github-token: ${{ secrets.GITHUB_TOKEN }}
         auto-push: false
-        comment-on-alert: true
+        comment-on-alert: false
         alert-threshold: '200%'
         fail-on-alert: false
+        save-data-file: false
 
   security:
     runs-on: ubuntu-latest

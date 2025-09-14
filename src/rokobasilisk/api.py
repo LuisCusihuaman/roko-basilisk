@@ -7,12 +7,15 @@ and decision theory comparisons.
 # SPDX-License-Identifier: MIT
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 
 from .models import Agent, UtilityFunction
 from .policies import CDT, EDT, FDT, TDT, RejectBlackmail
+
+# Type alias for decision theory policies
+PolicyType = Union[FDT, TDT, CDT, EDT, RejectBlackmail]
 
 
 @dataclass
@@ -70,7 +73,7 @@ def evaluate(
     Agent("ASI", default_params)
 
     # Select policy
-    policy_map = {
+    policy_map: Dict[str, PolicyType] = {
         'fdt': FDT(),
         'tdt': TDT(),
         'cdt': CDT(),
@@ -81,7 +84,7 @@ def evaluate(
     if policy not in policy_map:
         raise ValueError(f"Unknown policy: {policy}. Choose from {list(policy_map.keys())}")
 
-    policy_obj = policy_map[policy]
+    policy_obj: PolicyType = policy_map[policy]
 
     # Create utility function
     utility_func = UtilityFunction(utility)

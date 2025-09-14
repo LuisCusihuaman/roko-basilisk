@@ -101,8 +101,8 @@ def plot_decision_boundary(
     fig, ax = plt.subplots(figsize=(10, 8))
 
     # Plot decision regions
-    im = ax.imshow(decisions, extent=[p1_values.min(), p1_values.max(),
-                                   p2_values.min(), p2_values.max()],
+    im = ax.imshow(decisions, extent=(p1_values.min(), p1_values.max(),
+                                   p2_values.min(), p2_values.max()),
                   aspect='auto', origin='lower', cmap='RdYlBu_r', alpha=0.8)
 
     # Add contour lines
