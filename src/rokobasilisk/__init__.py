@@ -12,9 +12,9 @@ __author__ = "Luis Eduardo Cusihuaman Altagracia"
 __email__ = "luis@example.com"
 
 from .api import DecisionResult, evaluate, monte_carlo, sweep
+from .cache import cache_info, clear_cache, configure_cache
 from .models import Agent, DecisionTheory, UtilityFunction
 from .policies import CDT, EDT, FDT, TDT, RejectBlackmail
-from .cache import cache_info, clear_cache, configure_cache
 
 __all__ = [
     "evaluate",
