@@ -14,7 +14,7 @@ Key features:
 import json
 import time
 import uuid
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -25,7 +25,7 @@ except ImportError:
     HAS_CHROMADB = False
 
 try:
-    import pinecone  # noqa: F401
+    import pinecone  # type: ignore[import-not-found] # noqa: F401
     HAS_PINECONE = False  # Pinecone requires API key, disabled for now
 except ImportError:
     HAS_PINECONE = False
@@ -49,7 +49,7 @@ class TaskExperience:
     test_results: str
     performance_metrics: Dict[str, float]
     human_feedback: Optional[Dict[str, Any]] = None
-    improvement_suggestions: List[str] = None
+    improvement_suggestions: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -63,7 +63,7 @@ class PreferencePair:
     rejected_reasoning: str
     preference_score: float  # 0-1, higher = stronger preference
     human_feedback: Optional[str] = None
-    timestamp: float = None
+    timestamp: float = field(default_factory=lambda: time.time())
 
 
 class StructuredLogger:
@@ -235,8 +235,8 @@ class VectorMemoryStore:
     def __init__(self, db_path: str = "./chroma_memory", collection_name: str = "task_experiences"):
         self.db_path = db_path
         self.collection_name = collection_name
-        self.client = None
-        self.collection = None
+        self.client: Optional[Any] = None
+        self.collection: Optional[Any] = None
 
         if HAS_CHROMADB:
             self._initialize_chromadb()
@@ -250,14 +250,16 @@ class VectorMemoryStore:
 
             # Get or create collection
             try:
-                self.collection = self.client.get_collection(name=self.collection_name)
-                logger.info(f"Loaded existing collection: {self.collection_name}")
+                if self.client:
+                    self.collection = self.client.get_collection(name=self.collection_name)
+                    logger.info(f"Loaded existing collection: {self.collection_name}")
             except Exception:
-                self.collection = self.client.create_collection(
-                    name=self.collection_name,
-                    metadata={"description": "Task solving experiences for semantic retrieval"}
-                )
-                logger.info(f"Created new collection: {self.collection_name}")
+                if self.client:
+                    self.collection = self.client.create_collection(
+                        name=self.collection_name,
+                        metadata={"description": "Task solving experiences for semantic retrieval"}
+                    )
+                    logger.info(f"Created new collection: {self.collection_name}")
 
         except Exception as e:
             logger.error(f"Error initializing ChromaDB: {e}")
@@ -386,8 +388,8 @@ class HumanFeedbackInterface:
         # Quality rating
         while True:
             try:
-                quality = input("\nRate solution quality (1-5, 5=excellent): ").strip()
-                quality = int(quality)
+                quality_str = input("\nRate solution quality (1-5, 5=excellent): ").strip()
+                quality = int(quality_str)
                 if 1 <= quality <= 5:
                     feedback['quality'] = quality
                     break
@@ -411,8 +413,8 @@ class HumanFeedbackInterface:
         # Efficiency
         while True:
             try:
-                efficiency = input("Rate solution efficiency (1-5, 5=very efficient): ").strip()
-                efficiency = int(efficiency)
+                efficiency_str = input("Rate solution efficiency (1-5, 5=very efficient): ").strip()
+                efficiency = int(efficiency_str)
                 if 1 <= efficiency <= 5:
                     feedback['efficiency'] = efficiency
                     break
@@ -427,7 +429,9 @@ class HumanFeedbackInterface:
             feedback['comments'] = comments
 
         # Overall preference (for DPO training)
-        overall_score = (feedback['quality'] + feedback['efficiency']) / 2
+        quality_score = feedback['quality']  # int
+        efficiency_score = feedback['efficiency']  # int
+        overall_score = (quality_score + efficiency_score) / 2
         if feedback['correct']:
             overall_score += 1  # Bonus for correctness
 
@@ -469,10 +473,10 @@ class HumanFeedbackInterface:
 
     def create_preference_pairs(self, min_score_diff: float = 0.3) -> List[PreferencePair]:
         """Create preference pairs for DPO training from feedback data."""
-        pairs = []
+        pairs: List[PreferencePair] = []
 
         # Group feedback by task type
-        task_groups = {}
+        task_groups: Dict[str, List[Dict[str, Any]]] = {}
         for feedback in self.feedback_data:
             # Would need to link back to experiences to get task info
             # Simplified for now

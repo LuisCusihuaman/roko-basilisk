@@ -216,7 +216,7 @@ class ConfigManager:
 
     def _dict_to_config(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """Convert nested dictionaries to appropriate dataclass instances."""
-        result = {}
+        result: Dict[str, Any] = {}
 
         for key, value in data.items():
             if key == 'model' and isinstance(value, dict):
@@ -238,7 +238,7 @@ class ConfigManager:
 
     def get_env_config(self) -> Dict[str, Any]:
         """Get configuration from environment variables."""
-        env_config = {}
+        env_config: Dict[str, Any] = {}
 
         # Model configuration
         if os.getenv('ROKO_MODEL_NAME'):
@@ -258,8 +258,10 @@ class ConfigManager:
 
         # Security configuration
         if os.getenv('ROKO_ENABLE_HUMAN_OVERSIGHT'):
-            env_config.setdefault('security', {})['enable_human_oversight'] = \
-                os.getenv('ROKO_ENABLE_HUMAN_OVERSIGHT').lower() == 'true'
+            env_val = os.getenv('ROKO_ENABLE_HUMAN_OVERSIGHT')
+            if env_val:
+                env_config.setdefault('security', {})['enable_human_oversight'] = \
+                    env_val.lower() == 'true'
 
         return env_config
 
