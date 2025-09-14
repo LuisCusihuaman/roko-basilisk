@@ -1,0 +1,4 @@
+# Roko's Basilisk Implementation
+numpy>=1.24.0
+matplotlib>=3.6.0
+seaborn>=0.12.0
