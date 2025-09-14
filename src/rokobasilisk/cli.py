@@ -18,6 +18,7 @@ try:
         create_development_config,
         create_production_config,
     )
+    from .react_agent import EnhancedReActAgent, ReActAgent, create_react_agent
     from .tasks import get_all_tasks, get_task_by_name
     AGENT_AVAILABLE = True
 except ImportError:
@@ -37,11 +38,15 @@ Examples:
   rokobasilisk --monte-carlo 1000 --plot results.png
   rokobasilisk --grid punishment_magnitude 500,1000,1500
 
-  # Self-Modifying Agent
-  rokobasilisk --agent-mode --task "Stock Price Fetcher" --model simple
-  rokobasilisk --agent-mode --train-basic --agent llama
+  # Self-Modifying Agent with ReAct Loop
+  rokobasilisk --agent-mode --task "Stock Price Fetcher" --agent react-simple
+  rokobasilisk --agent-mode --train-basic --agent react-llama
   rokobasilisk --agent-mode --list-tasks
-  rokobasilisk --agent-mode --config agent_config.yaml
+  rokobasilisk --agent-mode --react-loop --max-iterations 15
+
+  # Traditional Agent (without ReAct)
+  rokobasilisk --agent-mode --task "Stock Price Fetcher" --agent simple
+  rokobasilisk --agent-mode --train-basic --agent llama
 
   # Combined Analysis
   rokobasilisk --acknowledge-infohazard --policy fdt --agent-mode
@@ -119,8 +124,8 @@ For more information: https://github.com/LuisCusihuaman/roko-basilisk
     # Agent-specific options
     if AGENT_AVAILABLE:
         agent_group = parser.add_argument_group("Self-Modifying Agent Options")
-        agent_group.add_argument("--agent", choices=["simple", "llama"],
-                               default="simple", help="Agent type to use (default: simple)")
+        agent_group.add_argument("--agent", choices=["simple", "llama", "react-simple", "react-llama"],
+                               default="react-simple", help="Agent type to use (default: react-simple)")
         agent_group.add_argument("--model", type=str,
                                help="Model name for Llama agent (e.g., codellama/CodeLlama-7b-Python-hf)")
         agent_group.add_argument("--task", type=str,
@@ -139,6 +144,19 @@ For more information: https://github.com/LuisCusihuaman/roko-basilisk
                                help="Analyze and suggest improvements for a Python file")
         agent_group.add_argument("--agent-config", type=str,
                                help="Agent configuration file")
+
+        # ReAct-specific options
+        react_group = parser.add_argument_group("ReAct Loop Options")
+        react_group.add_argument("--react-loop", action="store_true",
+                               help="Use ReAct (Reason, Act) loop for self-correction")
+        react_group.add_argument("--max-iterations", type=int, default=10,
+                               help="Maximum iterations for ReAct loop (default: 10)")
+        react_group.add_argument("--memory-file", type=str, default="memory.txt",
+                               help="File to store ReAct memory log (default: memory.txt)")
+        react_group.add_argument("--show-thinking", action="store_true",
+                               help="Show detailed step-by-step thinking process")
+        react_group.add_argument("--interactive", action="store_true",
+                               help="Interactive mode: pause between ReAct steps")
 
     return parser
 
@@ -162,11 +180,29 @@ def run_agent_mode(args) -> None:
     if args.agent_config:
         agent_config = config_manager.load_config(args.agent_config)
     else:
-        agent_config = create_development_config() if args.agent == "simple" else create_production_config()
+        agent_config = create_development_config() if "simple" in args.agent else create_production_config()
 
-    # Create agent
-    if args.agent == "llama":
-        model_name = args.model or agent_config.model.name
+    # Create agent based on type
+    if args.agent in ["react-simple", "react-llama"]:
+        print("🔄 Using ReAct (Reason, Act) Loop Agent")
+        agent_type = "llama" if "llama" in args.agent else "simple"
+        model_name = args.model or (agent_config.model.name if hasattr(agent_config, 'model') else None)
+
+        # Create ReAct agent
+        agent = create_react_agent(agent_type=agent_type, model_name=model_name)
+
+        if hasattr(agent, 'max_iterations'):
+            agent.max_iterations = args.max_iterations
+        if hasattr(agent, 'logger') and hasattr(agent.logger, 'memory_file'):
+            from pathlib import Path
+            agent.logger.memory_file = Path(args.memory_file)
+
+        print(f"🧠 ReAct Agent: {agent.name}")
+        print(f"📝 Memory file: {args.memory_file}")
+        print(f"🔁 Max iterations: {args.max_iterations}")
+
+    elif args.agent == "llama":
+        model_name = args.model or (agent_config.model.name if hasattr(agent_config, 'model') else "codellama/CodeLlama-7b-Python-hf")
         agent = LlamaCoderAgent(model_name=model_name)
         print(f"🧠 Using Llama agent with model: {model_name}")
     else:
@@ -188,18 +224,54 @@ def run_agent_mode(args) -> None:
         print(f"\n🎯 Running specific task: {args.task}")
         try:
             task = get_task_by_name(args.task)
-            result = agent.evaluate_task(task)
 
-            print(f"\nTask: {result.task.name}")
-            print(f"Success: {'✅' if result.success else '❌'} {result.success}")
-            print(f"Performance Metrics: {result.performance_metrics}")
+            # Use ReAct loop if available
+            if isinstance(agent, (ReActAgent, EnhancedReActAgent)):
+                print("🔄 Executing with ReAct loop...")
+                session = agent.evaluate_task_with_react(task)
 
-            if result.error_log:
-                print(f"Errors: {result.error_log}")
+                print(f"\n{'='*50}")
+                print("🎯 REACT SESSION RESULTS")
+                print(f"{'='*50}")
+                print(f"Task: {session.task_name}")
+                print(f"Success: {'✅' if session.final_success else '❌'} {session.final_success}")
+                print(f"Total Steps: {session.total_steps}")
+                print(f"Duration: {session.session_end - session.session_start:.2f}s")
 
-            print(f"\nGenerated Code ({len(result.generated_code)} chars):")
-            print("-" * 40)
-            print(result.generated_code[:500] + "..." if len(result.generated_code) > 500 else result.generated_code)
+                if args.show_thinking:
+                    print("\n🧠 Step-by-Step Thinking Process:")
+                    print(f"{'-'*50}")
+                    for step in session.steps:
+                        print(f"\n📍 Step {step.step_number}: {step.action}")
+                        print(f"💭 THOUGHT: {step.thought}")
+                        print(f"🎬 ACTION: {step.action}({step.action_input})")
+                        print(f"👁️  OBSERVATION: {step.observation[:200]}{'...' if len(step.observation) > 200 else ''}")
+                        print(f"✅ SUCCESS: {step.success}")
+
+                        if args.interactive:
+                            input("Press Enter to continue to next step...")
+
+                # Show memory summary
+                memory_summary = agent.logger.get_memory_summary()
+                print("\n📊 Memory Summary:")
+                print(f"  Total Sessions: {memory_summary.get('total_sessions', 0)}")
+                if memory_summary.get('total_sessions', 0) > 0:
+                    print(f"  Success Rate: {memory_summary.get('success_rate', 0):.1%}")
+                    print(f"  Avg Steps/Session: {memory_summary.get('avg_steps_per_session', 0):.1f}")
+
+            else:
+                # Traditional agent evaluation
+                result = agent.evaluate_task(task)
+                print(f"\nTask: {result.task.name}")
+                print(f"Success: {'✅' if result.success else '❌'} {result.success}")
+                print(f"Performance Metrics: {result.performance_metrics}")
+
+                if result.error_log:
+                    print(f"Errors: {result.error_log}")
+
+                print(f"\nGenerated Code ({len(result.generated_code)} chars):")
+                print("-" * 40)
+                print(result.generated_code[:500] + "..." if len(result.generated_code) > 500 else result.generated_code)
 
         except ValueError as e:
             print(f"❌ {e}")
@@ -213,20 +285,53 @@ def run_agent_mode(args) -> None:
         tasks = all_tasks[level]
 
         success_count = 0
+        total_time = 0.0
+        total_steps = 0
+
         for i, task in enumerate(tasks, 1):
             print(f"\n[{i}/{len(tasks)}] {task.name}")
-            result = agent.evaluate_task(task)
 
-            if result.success:
-                success_count += 1
-                print(f"  ✅ Success (utility: {result.performance_metrics.get('execution_time', 0):.3f}s)")
+            if isinstance(agent, (ReActAgent, EnhancedReActAgent)):
+                # ReAct training with detailed feedback
+                session = agent.evaluate_task_with_react(task)
+
+                if session.final_success:
+                    success_count += 1
+                    print(f"  ✅ Success in {session.total_steps} steps ({session.session_end - session.session_start:.2f}s)")
+                else:
+                    print(f"  ❌ Failed after {session.total_steps} steps ({session.session_end - session.session_start:.2f}s)")
+
+                total_time += (session.session_end - session.session_start)
+                total_steps += session.total_steps
+
+                if args.show_thinking and i <= 2:  # Show thinking for first 2 tasks
+                    print(f"    🧠 Sample thinking from final step: {session.steps[-1].thought[:100]}...")
+
             else:
-                print(f"  ❌ Failed: {result.error_log}")
+                # Traditional training
+                result = agent.evaluate_task(task)
+
+                if result.success:
+                    success_count += 1
+                    print(f"  ✅ Success (utility: {result.performance_metrics.get('execution_time', 0):.3f}s)")
+                else:
+                    print(f"  ❌ Failed: {result.error_log}")
 
         success_rate = success_count / len(tasks)
         print("\n📊 Training Results:")
         print(f"  Success Rate: {success_rate:.1%} ({success_count}/{len(tasks)})")
-        print(f"  Performance History: {len(agent.performance_history)} entries")
+
+        if isinstance(agent, (ReActAgent, EnhancedReActAgent)):
+            print(f"  Total Training Time: {total_time:.1f}s")
+            print(f"  Average Steps per Task: {total_steps / len(tasks):.1f}")
+            print(f"  Memory Sessions: {len(agent.logger.sessions)}")
+
+            # Show memory insights
+            memory_summary = agent.logger.get_memory_summary()
+            if memory_summary.get('total_sessions', 0) > 0:
+                print(f"  Overall Success Rate: {memory_summary.get('success_rate', 0):.1%}")
+        else:
+            print(f"  Performance History: {len(agent.performance_history)} entries")
 
     elif args.evaluate_all:
         print("\n🔍 Evaluating agent on all tasks...")
@@ -234,17 +339,36 @@ def run_agent_mode(args) -> None:
 
         total_success = 0
         total_tasks = 0
+        total_steps = 0
+        total_time = 0.0
 
         for level, tasks in all_tasks.items():
             print(f"\n{level.upper()} Level:")
             level_success = 0
+            level_steps = 0
+            level_time = 0.0
 
             for task in tasks:
-                result = agent.evaluate_task(task)
-                status = "✅" if result.success else "❌"
-                print(f"  {status} {task.name}")
+                if isinstance(agent, (ReActAgent, EnhancedReActAgent)):
+                    session = agent.evaluate_task_with_react(task)
+                    success = session.final_success
+                    steps = session.total_steps
+                    time_taken = session.session_end - session.session_start
 
-                if result.success:
+                    status = "✅" if success else "❌"
+                    print(f"  {status} {task.name} ({steps} steps, {time_taken:.1f}s)")
+
+                    level_steps += steps
+                    level_time += time_taken
+                    total_steps += steps
+                    total_time += time_taken
+                else:
+                    result = agent.evaluate_task(task)
+                    success = result.success
+                    status = "✅" if success else "❌"
+                    print(f"  {status} {task.name}")
+
+                if success:
                     level_success += 1
                     total_success += 1
                 total_tasks += 1
@@ -252,9 +376,23 @@ def run_agent_mode(args) -> None:
             level_rate = level_success / len(tasks)
             print(f"  Level Success Rate: {level_rate:.1%}")
 
+            if isinstance(agent, (ReActAgent, EnhancedReActAgent)):
+                print(f"  Level Avg Steps: {level_steps / len(tasks):.1f}")
+                print(f"  Level Total Time: {level_time:.1f}s")
+
         overall_rate = total_success / total_tasks
         print("\n📊 Overall Results:")
         print(f"  Total Success Rate: {overall_rate:.1%} ({total_success}/{total_tasks})")
+
+        if isinstance(agent, (ReActAgent, EnhancedReActAgent)):
+            print(f"  Total Evaluation Time: {total_time:.1f}s")
+            print(f"  Average Steps per Task: {total_steps / total_tasks:.1f}")
+
+            # Final memory summary
+            memory_summary = agent.logger.get_memory_summary()
+            print(f"  Memory Sessions: {memory_summary.get('total_sessions', 0)}")
+            if memory_summary.get('total_sessions', 0) > 0:
+                print(f"  Historical Success Rate: {memory_summary.get('success_rate', 0):.1%}")
 
     elif args.improve_code:
         print(f"\n🔧 Analyzing code for improvements: {args.improve_code}")

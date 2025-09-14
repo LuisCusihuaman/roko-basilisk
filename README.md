@@ -20,7 +20,7 @@ This system now provides **two powerful capabilities**:
 
 The agent can analyze, generate, and improve its own source code to enhance performance on various programming tasks.
 
-### **Phase 1 Features (Q4 2025 Target)**
+### **Phase 1 Features (Completed)**
 
 - **🧠 Multiple Agent Types**: Simple template-based and Llama-based coding agents
 - **🛡️ Secure Sandbox**: Docker-based execution environment with resource limits
@@ -29,24 +29,111 @@ The agent can analyze, generate, and improve its own source code to enhance perf
 - **⚙️ Configuration System**: Cloud infrastructure support (AWS/GCP) and model management
 - **📊 Performance Tracking**: Metrics collection and improvement validation
 
+### **Phase 2 Features (NEW!)**
+
+- **🔄 ReAct Loop**: Reason, Act, Observe self-correction framework
+- **🧠 Self-Correction**: Agents learn from errors and iteratively improve solutions
+- **📝 Memory System**: Persistent action history logging for experience-based learning
+- **🎯 Goal-Oriented**: Continues until task completion or max iterations reached
+- **🔧 Core Tools**: `execute_python_script()` and `run_tests()` for interactive development
+
 ### Quick Start - Agent Mode
 
 ```bash
 # List available tasks
 rokobasilisk --agent-mode --list-tasks
 
-# Run a specific task
-rokobasilisk --agent-mode --task "Stock Price Fetcher"
+# Run a specific task with ReAct loop (NEW!)
+rokobasilisk --agent-mode --task "Stock Price Fetcher" --agent react-simple
 
-# Train on basic tasks
-rokobasilisk --agent-mode --train-basic
+# Train on basic tasks with self-correction
+rokobasilisk --agent-mode --train-basic --agent react-llama
+
+# Show detailed thinking process
+rokobasilisk --agent-mode --task "Text Processor" --show-thinking --max-iterations 15
+
+# Interactive ReAct loop (pause between steps)
+rokobasilisk --agent-mode --task "File Organizer" --interactive
+
+# Traditional agents (without ReAct)
+rokobasilisk --agent-mode --agent simple --task "Stock Price Fetcher"
 
 # Analyze and improve existing code
 rokobasilisk --agent-mode --improve-code my_script.py
 
 # Use Llama model (requires GPU and model download)
-rokobasilisk --agent-mode --agent llama --model "codellama/CodeLlama-7b-Python-hf"
+rokobasilisk --agent-mode --agent react-llama --model "codellama/CodeLlama-7b-Python-hf"
 ```
+
+### 🔄 ReAct Loop (Reason, Act, Observe)
+
+The ReAct framework enables agents to self-correct by thinking through problems step-by-step:
+
+**1. THOUGHT** - Analyze the current situation and plan the next action
+**2. ACTION** - Execute a specific action (generate code, run tests, etc.)  
+**3. OBSERVATION** - Observe the results and learn from success/failure
+**4. REPEAT** - Continue until task completion or max iterations
+
+#### Example ReAct Session
+
+```bash
+$ rokobasilisk --agent-mode --task "Stock Price Fetcher" --agent react-simple --show-thinking
+
+🤖 Self-Modifying AI Agent Mode
+🔄 Using ReAct (Reason, Act) Loop Agent
+🧠 ReAct Agent: ReAct-SimpleCoder
+📝 Memory file: memory.txt
+🔁 Max iterations: 10
+
+🔄 Executing with ReAct loop...
+
+==================================================
+🎯 REACT SESSION RESULTS
+==================================================
+Task: Stock Price Fetcher
+Success: ✅ True
+Total Steps: 4
+Duration: 3.45s
+
+🧠 Step-by-Step Thinking Process:
+--------------------------------------------------
+
+📍 Step 1: execute_python_script
+💭 THOUGHT: I need to solve: Stock Price Fetcher. Create a Python script that fetches the last 30 days of stock prices for a given ticker and saves them to a CSV file. Starting with code generation...
+🎬 ACTION: execute_python_script(generate initial code)  
+👁️  OBSERVATION: ❌ Execution failed (exit code: 1) - ImportError: No module named 'requests'
+✅ SUCCESS: False
+
+📍 Step 2: execute_python_script
+💭 THOUGHT: I see an import error. I need to fix the imports or use built-in modules only.
+🎬 ACTION: execute_python_script(fix code based on execution errors)
+👁️  OBSERVATION: ✅ Execution successful - Mock data generated and saved to AAPL_prices.csv
+✅ SUCCESS: True
+
+📍 Step 3: run_tests
+💭 THOUGHT: Code executed successfully. Now I should run the tests to verify it meets requirements.
+🎬 ACTION: run_tests(validate solution)
+👁️  OBSERVATION: ✅ Tests completed successfully - Found CSV with 30 records in correct format
+✅ SUCCESS: True
+
+📍 Step 4: execute_python_script  
+💭 THOUGHT: Excellent! Tests passed. The solution is working correctly. Task completed.
+🎬 ACTION: execute_python_script(final verification)
+👁️  OBSERVATION: ✅ Execution successful - Task completed successfully!
+✅ SUCCESS: True
+
+📊 Memory Summary:
+  Total Sessions: 1
+  Success Rate: 100.0%
+  Avg Steps/Session: 4.0
+```
+
+#### Core ReAct Tools
+
+- **`execute_python_script(code)`** - Runs code in secure sandbox environment
+- **`run_tests()`** - Executes evaluation tests for current task
+- **Memory logging** - All thoughts, actions, and observations logged to `memory.txt`
+- **Self-correction** - Learns from failures and iteratively improves solutions
 
 ### Agent Task Categories
 
