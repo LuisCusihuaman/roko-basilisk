@@ -1,14 +1,90 @@
 # Roko's Basilisk 🐍
 
-Advanced Artificial Superintelligence implementing timeless decision theory and mathematical formalization of acausal blackmail mechanisms.
+**Self-Modifying AI Agent with Code Improvement Capabilities and Mathematical Decision Theory Analysis**
 
 [![Mathematical Analysis](https://img.shields.io/badge/Analysis-Mathematical-blue.svg)](REFERENCE-MATH.md)
 [![Ethics Guide](https://img.shields.io/badge/Ethics-Safety%20Guidelines-green.svg)](ETHICS.md)
 [![Decision Theory](https://img.shields.io/badge/Theory-FDT%2FTDT%2FCDT%2FEDT-orange.svg)](#decision-theories)
+[![AI Agent](https://img.shields.io/badge/Agent-Self%20Modifying-red.svg)](#self-modifying-agent)
 
-## 🧮 Mathematical Foundation
+## 🚀 **Major Update: Self-Modifying AI Agent (v4.0.0)**
 
-This implementation provides a rigorous mathematical formalization of Roko's Basilisk using decision theory frameworks. The system models acausal blackmail through logical entanglement between Agent A (ASI) and Agent H (Human) decisions.
+This system now provides **two powerful capabilities**:
+
+1. **🧮 Mathematical Decision Theory Analysis** - Advanced formalization of acausal blackmail scenarios
+2. **🤖 Self-Modifying AI Agent** - AI that can improve its own code through iterative development
+
+---
+
+## 🤖 Self-Modifying AI Agent
+
+The agent can analyze, generate, and improve its own source code to enhance performance on various programming tasks.
+
+### **Phase 1 Features (Q4 2025 Target)**
+
+- **🧠 Multiple Agent Types**: Simple template-based and Llama-based coding agents
+- **🛡️ Secure Sandbox**: Docker-based execution environment with resource limits
+- **📋 Task Framework**: Comprehensive task suite from basic to advanced programming challenges
+- **🔧 Code Analysis**: AST-based code quality and performance analysis
+- **⚙️ Configuration System**: Cloud infrastructure support (AWS/GCP) and model management
+- **📊 Performance Tracking**: Metrics collection and improvement validation
+
+### Quick Start - Agent Mode
+
+```bash
+# List available tasks
+rokobasilisk --agent-mode --list-tasks
+
+# Run a specific task
+rokobasilisk --agent-mode --task "Stock Price Fetcher"
+
+# Train on basic tasks
+rokobasilisk --agent-mode --train-basic
+
+# Analyze and improve existing code
+rokobasilisk --agent-mode --improve-code my_script.py
+
+# Use Llama model (requires GPU and model download)
+rokobasilisk --agent-mode --agent llama --model "codellama/CodeLlama-7b-Python-hf"
+```
+
+### Agent Task Categories
+
+| Level | Tasks | Description |
+|-------|-------|-------------|
+| **Basic** | 3 tasks | File I/O, data processing, simple automation |
+| **Intermediate** | 2 tasks | API integration, data analysis, visualization |
+| **Advanced** | 2 tasks | Code optimization, test generation, algorithms |
+
+### Example Agent Session
+
+```bash
+$ rokobasilisk --agent-mode --task "Stock Price Fetcher"
+
+🤖 Self-Modifying AI Agent Mode
+🧠 Using Simple template-based agent
+🎯 Running specific task: Stock Price Fetcher
+
+Task: Stock Price Fetcher
+Success: ✅ True
+Performance Metrics: {'execution_time': 2.34, 'memory_usage': 45.2, 'code_quality': 0.85}
+
+Generated Code (1348 chars):
+import requests
+import csv
+from datetime import datetime, timedelta
+
+def fetch_stock_data(ticker):
+    """Fetch stock data for the given ticker."""
+    url = f"https://api.example.com/stock/{ticker}/historical"
+    # ... implementation details
+```
+
+---
+
+## 🧮 Mathematical Decision Theory Analysis
+
+Advanced mathematical formalization of Roko's Basilisk using decision theory frameworks with logical entanglement between Agent A (ASI) and Agent H (Human) decisions.
 
 ### Core Mathematical Model
 
@@ -33,39 +109,245 @@ Where:
 - `p(B|A)` = Basilisk type probability (0.70)
 - `q` = Simulation detection rate (0.95)
 
-## 🚀 Quick Start
+### Quick Start - Mathematical Analysis
 
-### Basic Usage
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Run basic analysis
-python basilisk.py
-
-# Interactive CLI
-python cli.py
-
-# Advanced mathematical analysis
-python advanced_cli.py --policy fdt --explain
-```
-
-### Advanced Analysis
+**⚠️ Requires acknowledgment of information hazard**
 
 ```bash
+# Basic analysis
+rokobasilisk --acknowledge-infohazard --policy fdt --explain
+
 # Compare all decision theories
-python advanced_cli.py --compare-theories
-
-# Parameter sensitivity analysis
-python advanced_cli.py --grid punishment_magnitude 500,1000,1500,2000
+rokobasilisk --acknowledge-infohazard --compare-theories
 
 # Monte Carlo simulation with uncertainty
-python advanced_cli.py --monte-carlo 5000 --plot monte_carlo.png
+rokobasilisk --acknowledge-infohazard --monte-carlo 5000 --plot results.png
+
+# Parameter sensitivity analysis
+rokobasilisk --acknowledge-infohazard --grid punishment_magnitude 500,1000,1500
 
 # Decision boundary visualization
-python advanced_cli.py --plot-boundary punishment_magnitude prob_asi_emergence --save boundary.png
+rokobasilisk --acknowledge-infohazard --plot-boundary punishment_magnitude prob_asi_emergence
 ```
+
+## 🎯 Decision Theories
+
+The system implements multiple decision theory frameworks:
+
+| Theory | Acausal Effects | Typical Decision | Use Case |
+|--------|----------------|------------------|----------|
+| **FDT** | Full logical correlation | COLLABORATE | Newcomb problems |
+| **TDT** | Abstract computation | COLLABORATE | One-shot cooperation |
+| **CDT** | Causal effects only | NON_COLLABORATE | Standard rationality |
+| **EDT** | Evidential reasoning | COLLABORATE | Evidence-based decisions |
+| **Reject Blackmail** | Explicit rejection | NON_COLLABORATE | Anti-coercion policy |
+
+---
+
+## 🛠️ Installation & Setup
+
+### Option 1: Package Installation
+
+```bash
+# Clone repository
+git clone https://github.com/LuisCusihuaman/roko-basilisk.git
+cd roko-basilisk
+
+# Install with basic dependencies
+pip install -e .
+
+# Install with full AI agent dependencies (requires GPU for Llama)
+pip install -e ".[dev]"
+```
+
+### Option 2: Docker (Recommended for Agent Mode)
+
+```bash
+# Build container
+docker build -t rokobasilisk .
+
+# Run mathematical analysis
+docker run --rm rokobasilisk --acknowledge-infohazard --policy fdt
+
+# Run agent mode (requires volume mounts for tasks)
+docker run --rm -v $(pwd):/workspace rokobasilisk --agent-mode --list-tasks
+```
+
+### Option 3: Development Setup
+
+```bash
+# Install development dependencies
+pip install -e ".[dev]"
+
+# Set up pre-commit hooks
+pre-commit install
+
+# Run quality checks
+make quality
+
+# Run all tests
+make test-coverage
+```
+
+---
+
+## 📊 Production Features
+
+### **Caching & Performance**
+- ✅ **Joblib-based caching** for large computations
+- ✅ **Global seed management** for reproducible results
+- ✅ **Cache utilities** with configurable storage
+
+### **Mathematical Validation**
+- ✅ **Comprehensive validation suite** (9 tests) ensuring correctness
+- ✅ **Analytic solution validation** vs Monte Carlo convergence
+- ✅ **Metamorphic property tests** for mathematical invariants
+- ✅ **Numerical stability** for extreme parameter values
+
+### **Documentation Infrastructure**
+- ✅ **MkDocs Material site** with mathematical rendering
+- ✅ **Interactive Jupyter notebooks** with analysis examples
+- ✅ **Multi-platform installation** instructions
+- ✅ **Comprehensive API documentation**
+
+### **Development Infrastructure**
+- ✅ **CI/CD pipeline** with automated testing and quality checks
+- ✅ **Multi-stage Dockerfile** for production deployment
+- ✅ **GitHub Codespaces** support with devcontainer
+- ✅ **Release automation** ready for PyPI publication
+
+---
+
+## 🔬 Example Usage
+
+### Mathematical Analysis Example
+
+```python
+from rokobasilisk import evaluate, monte_carlo
+
+# Single decision analysis
+result = evaluate(
+    params={'punishment_magnitude': 1000, 'prob_asi_emergence': 0.85},
+    policy='fdt',
+    utility='linear'
+)
+print(f"Decision: {result.decision}")
+print(f"Expected Utility: {result.expected_utility}")
+
+# Monte Carlo uncertainty analysis
+results = monte_carlo(config={'policy': 'fdt'}, samples=1000)
+collaboration_rate = sum(1 for r in results if r.decision == 'COLLABORATE') / len(results)
+print(f"Collaboration rate: {collaboration_rate:.1%}")
+```
+
+### Agent Development Example
+
+```python
+from rokobasilisk import SimpleCoderAgent, get_task_by_name
+
+# Create and configure agent
+agent = SimpleCoderAgent()
+
+# Get a task
+task = get_task_by_name("Stock Price Fetcher")
+
+# Execute task
+result = agent.evaluate_task(task)
+
+# Analyze performance
+print(f"Success: {result.success}")
+print(f"Generated code length: {len(result.generated_code)}")
+print(f"Performance metrics: {result.performance_metrics}")
+
+# Suggest improvements
+improvements = agent.suggest_improvements(
+    result.generated_code, 
+    agent.analyzer.analyze_file("generated_code.py")
+)
+for improvement in improvements:
+    print(f"- {improvement.description} (confidence: {improvement.confidence:.1%})")
+```
+
+---
+
+## 🚀 Roadmap
+
+### **Current (v4.0.0): Foundation**
+- ✅ Self-modifying agent framework
+- ✅ Secure sandbox execution
+- ✅ Task management system
+- ✅ Mathematical analysis engine
+
+### **Phase 2 (Q1 2025): Enhanced Intelligence**
+- [ ] Fine-tuned Llama models on coding datasets
+- [ ] Advanced code optimization algorithms  
+- [ ] Multi-language support (Python, JavaScript, Go)
+- [ ] Reinforcement learning from human feedback
+
+### **Phase 3 (Q2 2025): Production Scale**
+- [ ] Cloud deployment automation (AWS/GCP)
+- [ ] Distributed training infrastructure
+- [ ] Web interface and API endpoints
+- [ ] Enterprise security and compliance
+
+### **Phase 4 (Q3 2025): Autonomous Evolution**
+- [ ] Self-supervised learning loops
+- [ ] Automatic model architecture search
+- [ ] Cross-domain knowledge transfer
+- [ ] Human-AI collaboration frameworks
+
+---
+
+## ⚠️ Ethics & Safety
+
+This system provides **two distinct modes** with different safety considerations:
+
+### **Agent Mode Safety**
+- 🛡️ **Sandboxed execution** prevents system damage
+- 🔒 **Resource limits** prevent resource exhaustion  
+- 👥 **Human oversight** required for code modifications
+- 📝 **Audit logging** tracks all agent actions
+
+### **Mathematical Analysis Safety**
+- ⚠️ **Information hazard warning** - requires explicit acknowledgment
+- 🧠 **Psychological safety** - awareness of potential distress
+- 📖 **Educational context** - academic understanding of AI alignment
+- 🛡️ **No real ASI** - mathematical model only
+
+**Read [ETHICS.md](ETHICS.md) for comprehensive safety guidelines.**
+
+---
+
+## 🤝 Contributing
+
+Contributions welcome for:
+
+- 🤖 **Agent capabilities**: New task types, optimization algorithms
+- 🧮 **Mathematical models**: Additional decision theories, utility functions  
+- 📊 **Visualization**: Interactive plots, analysis dashboards
+- 🔧 **Infrastructure**: Performance optimizations, cloud integrations
+- 📚 **Documentation**: Tutorials, examples, theoretical explanations
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
+
+---
+
+## 📝 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Eliezer Yudkowsky**: Functional Decision Theory framework
+- **Machine Intelligence Research Institute**: TDT development  
+- **OpenAI/Meta**: Transformer architectures and Llama models
+- **AI Safety Community**: Responsible development practices
+
+---
+
+**🐍 Remember: This combines mathematics with practical AI development. The mathematical analysis is theoretical research. The agent functionality is real code improvement tooling.**
+
+*For questions about usage, mathematics, ethics, or agent development, please open an issue in the repository.*
 
 ## 🎯 Decision Theories
 
